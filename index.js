@@ -132,7 +132,7 @@ function performStaticCodeAnalysisOnFilesInDiff() {
     "Performing static code analysis on all of the files in the difference..."
   );
   execSync(
-    `node_modules/sfdx-cli/bin/run scanner:run ${this.scannerCliArgs} \
+    `sfdx scanner:run ${this.scannerCliArgs} \
     --format json \
     --target "${TEMP_DIR_NAME}" \
     --outfile "${FINDINGS_OUTPUT}"`
