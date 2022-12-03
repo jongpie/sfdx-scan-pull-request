@@ -34,28 +34,27 @@ jobs:
             - name: 'Checkout source code'
               uses: actions/checkout@v3
 
-            - name: 'Restore node_modules cache'
-              id: cache-npm
-              uses: actions/cache@v3
-              with:
-                  path: node_modules
-                  key: npm-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      npm-${{ env.cache-name }}-
-                      npm-
+            # - name: 'Restore node_modules cache'
+            #   id: cache-npm
+            #   uses: actions/cache@v3
+            #   with:
+            #       path: node_modules
+            #       key: npm-${{ hashFiles('**/package-lock.json') }}
+            #       restore-keys: |
+            #           npm-${{ env.cache-name }}-
+            #           npm-
 
+            # - name: 'Install npm dependencies'
+            #   if: steps.cache-npm.outputs.cache-hit != 'true'
+            #   run: npm ci
             - name: 'Install npm dependencies'
-              if: steps.cache-npm.outputs.cache-hit != 'true'
-              run: npm ci
+              run: npm install eslint prettier
 
             - name: Run ESLint
-              run: eslint . --ext .js,.jsx,.ts,.tsx
+              run: npx eslint . --ext .js,.jsx,.ts,.tsx
 
             - name: Run Prettier
-              uses: creyD/prettier_action@v4.2
-              with:
-                  # This part is also where you can pass other options, for example:
-                  prettier_options: --list-different **/*.{js,md}
+              run: npx prettier --list-different **/*.{js,md}
 
     jest-tests:
         name: 'Run Jest Tests'
@@ -65,19 +64,19 @@ jobs:
             - name: 'Checkout source code'
               uses: actions/checkout@v3
 
-            - name: 'Restore node_modules cache'
-              id: cache-npm
-              uses: actions/cache@v3
-              with:
-                  path: node_modules
-                  key: npm-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      npm-${{ env.cache-name }}-
-                      npm-
+            # - name: 'Restore node_modules cache'
+            #   id: cache-npm
+            #   uses: actions/cache@v3
+            #   with:
+            #       path: node_modules
+            #       key: npm-${{ hashFiles('**/package-lock.json') }}
+            #       restore-keys: |
+            #           npm-${{ env.cache-name }}-
+            #           npm-
 
-            - name: 'Install npm dependencies'
-              if: steps.cache-npm.outputs.cache-hit != 'true'
-              run: npm ci
+            # - name: 'Install npm dependencies'
+            #   if: steps.cache-npm.outputs.cache-hit != 'true'
+            #   run: npm ci
 
             - name: 'Run JEST Tests'
               run: npm run test
