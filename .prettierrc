@@ -1,21 +1,6 @@
 {
-    "trailingComma": "none",
-    "singleQuote": true,
-    "tabWidth": 4,
-    "printWidth": 160,
-    "arrowParens": "avoid",
-    "overrides": [
-        {
-            "files": "**/lwc/**/*.html",
-            "options": { "parser": "lwc" }
-        },
-        {
-            "files": "*.{cmp,page,component}",
-            "options": { "parser": "html" }
-        },
-        {
-            "files": "*.{md}",
-            "options": { "parser": "markdown" }
-        }
-    ]
+  "arrowParens": "avoid",
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "es5"
 }
