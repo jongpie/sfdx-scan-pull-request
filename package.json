@@ -3,7 +3,7 @@
   "main": "index.js",
   "scripts": {
     "sfdx": "node_modules/sfdx-cli/bin/run",
-    "test": "echo 'Test results: No tests added yet! 😢'"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@actions/core": "^1.9.0",

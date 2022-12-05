@@ -1,88 +1,63 @@
 # Pipeline for testing 2 areas:
 #   1. Verifying the code quality of the repo using ESLint & Prettier
 #   2. Test the GitHub Action (index.js) using Jest unit tests & mocks
+
 name: Test
 
 on:
-    push:
-        # branches:
-        #   - main
-        paths-ignore:
-            - '.forceignore'
-            - '.gitignore'
-            - '.prettierignore'
-            - '.prettierrc'
-            - 'LICENSE'
-            - 'package.json'
-            - 'README.md'
-    pull_request:
-        types: [opened, synchronize, reopened]
-        paths-ignore:
-            - '.forceignore'
-            - '.gitignore'
-            - '.prettierignore'
-            - '.prettierrc'
-            - 'LICENSE'
-            - 'package.json'
-            - 'README.md'
+  push:
+    # branches:
+    #   - main
+    paths-ignore:
+      - ".gitignore"
+      - ".prettierignore"
+      - ".prettierrc"
+      - "LICENSE"
+      - "package.json"
+      - "README.md"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - ".gitignore"
+      - ".prettierignore"
+      - ".prettierrc"
+      - "LICENSE"
+      - "package.json"
+      - "README.md"
 
 jobs:
-    code-quality-tests:
-        name: 'Run Code Quality Tests'
-        runs-on: ubuntu-latest
-        steps:
-            - name: 'Checkout source code'
-              uses: actions/checkout@v3
+  code-quality-tests:
+    name: "Run Code Quality Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout source code"
+        uses: actions/checkout@v3
 
-            # - name: 'Restore node_modules cache'
-            #   id: cache-npm
-            #   uses: actions/cache@v3
-            #   with:
-            #       path: node_modules
-            #       key: npm-${{ hashFiles('**/package-lock.json') }}
-            #       restore-keys: |
-            #           npm-${{ env.cache-name }}-
-            #           npm-
+      - name: "Install npm dependencies"
+        run: npm install eslint prettier
 
-            # - name: 'Install npm dependencies'
-            #   if: steps.cache-npm.outputs.cache-hit != 'true'
-            #   run: npm ci
-            - name: 'Install npm dependencies'
-              run: npm install eslint prettier
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
 
-            - name: Run ESLint
-              run: npx eslint . --ext .js,.jsx,.ts,.tsx
+      - name: Run Prettier
+        run: npx prettier --list-different **/*.{js,md}
 
-            - name: Run Prettier
-              run: npx prettier --list-different **/*.{js,md}
+  jest-tests:
+    name: "Run Jest Tests"
+    needs: [code-quality-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout source code"
+        uses: actions/checkout@v3
 
-    jest-tests:
-        name: 'Run Jest Tests'
-        needs: [code-quality-tests]
-        runs-on: ubuntu-latest
-        steps:
-            - name: 'Checkout source code'
-              uses: actions/checkout@v3
+      - name: "Install npm dependencies"
+        run: npm install jest
 
-            # - name: 'Restore node_modules cache'
-            #   id: cache-npm
-            #   uses: actions/cache@v3
-            #   with:
-            #       path: node_modules
-            #       key: npm-${{ hashFiles('**/package-lock.json') }}
-            #       restore-keys: |
-            #           npm-${{ env.cache-name }}-
-            #           npm-
+      - name: "Run JEST Tests"
+        run: npm run test
 
-            # - name: 'Install npm dependencies'
-            #   if: steps.cache-npm.outputs.cache-hit != 'true'
-            #   run: npm ci
-
-            - name: 'Run JEST Tests'
-              run: npm run test
-
-            # TODO integrate with Codecov.io?
-            # - name: "Upload LWC code coverage to Codecov.io"
-            #   uses: codecov/codecov-action@v3
-            #   with:
-            #     token: ${{ secrets.CODECOV_TOKEN }}
+      # TODO integrate with Codecov.io?
+      # - name: "Upload LWC code coverage to Codecov.io"
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
